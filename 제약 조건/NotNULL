@@ -1,0 +1,85 @@
+제약 조건 ( 제약 조건이 있어야만 데이터를 고급스럽게 관리할 수 있다.)
+
+UNIQUE, PRIMARY KEY, FOREIGN KEY
+
+영역 무결설(domain integrity) : 열에 저장되는 값의 적정 여부를 확인. 자료형, 적절한 형식의
+			데이터, NULL 여부같은 정해 놓은 범위를 만족하는 데이터임을
+			규정
+
+개체 무결성(ENTITY INTEGRITY) : 테이블 데이터를 유일하게 식별할 수 있는 기본키는 반드시
+			    값을 가지고 있어야 하며 NULL이 될 수 없고 중복될 수도 없음을
+			    규정
+
+참조 무결성(REFERENTIAL INTEGRITY) : 참조 테이블의 외래키 값은 참조 테이블의 기본키로서
+			           존재해야 하며 NULL이 가능
+
+
+제약 조건 확인
+
+OWNER 제약 조건 소유 계정
+
+CONSTRAINT_NAME 제약 조건 이름(직접 지정하지 않을 경우 오라클이 자동으로 지정함)
+
+CONSTRAINT_TYPE 제약 조건 종류 
+		C : CHECK, NOT NULL
+		U : UNIQUE
+		P : PRIMARYKEY
+		R : FOREIGN KEY
+
+TABLE_NAME : 제약 조건을 지정한 테이블 이름
+
+
+#테이블 생성 제약
+CREATE TABLE TABLE_NOTNULL(
+    LOGIN_ID    VARCHAR2(20) NOT NULL,
+    LOGIN_PWD   VARCHAR2(20) NOT NULL,
+    TEL         VARCHAR2(20)
+);
+
+
+#14-3제약 조건이 없는 TEL열에 NULL값 입력
+INSERT INTO TABLE_NOTNULL (LOGIN_ID, LOGIN_PWD)
+VALUES ( 'TEST_ID_01','1234');
+
+#14-5제약 조건 살펴보기
+SELECT OWNER, CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME
+FROM USER_CONSTRAINTS;
+
+
+#14-7 제약조건 추가
+SELECT * FROM TABLE_NOTNULL;
+
+ALTER TABLE TABLE_NOTNULL
+MODIFY (TEL NOT NULL);
+
+#14-8 TEL 컬럼 NULL제거 ->UPDATE
+UPDATE TABLE_NOTNULL
+   SET TEL = '010-1111-1111'
+   WHERE LOGIN_ID = 'TEST_ID_01';
+
+
+#14-9 NOT NULL 제약 조건 추가하기
+ALTER TABLE TABLE_NOTNULL
+MODIFY (TEL NOT NULL);
+
+#14-12 이미 생성된 제약 조건 이름 변경하기
+ALTER TABLE TABLE_NOTNULL2
+RENAME CONSTRAINT TBLN_TEL_NN TO TBLN2_TEL_NN;
+
+ALTER TABLE TABLE_NOTNULL2
+MODIFY (TEL NOT NULL);      (이름을 바꿔주는 과정을 생략하려면 
+	MODIFY(TEL CONSTRAINT MY_01 NOTNULL)을 제약조건을 추가하는 부분에서 이름 설정)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
